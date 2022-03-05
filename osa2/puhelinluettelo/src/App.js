@@ -1,53 +1,53 @@
 import { useState } from 'react'
-import Note from './components/Note'
+import Persons from './components/Persons'
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
 
-const App = (props) => {
-  const [notes, setNotes] = useState(props.notes)
-  const [newNote, setNewNote] = useState('')
-  const [showAll, setShowAll] = useState(true)
+const App = () => {
+  const [persons, setPersons] = useState([
+    { name: 'Arto Hellas', number: '040-123456' },
+    { name: 'Ada Lovelace', number: '39-44-5323523' },
+    { name: 'Dan Abramov', number: '12-43-234345' },
+    { name: 'Mary Poppendieck', number: '39-23-6423122' }
+  ]) 
+  const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
+  const [newFilter, setNewFilter] = useState('')
 
-  const addNote = (event) => {
+  const addPerson = (event) => {
     event.preventDefault()
-    const noteObject = {
-      content: newNote,
-      date: new Date().toISOString(),
-      important: Math.random() > 0.5,
-      id: notes.length + 1,
+    if (persons.map(p => p.name).includes(newName) || persons.map(p => p.number).includes(newNumber)) {
+      alert(`${newName} is already added to phonebook`)
+    } else {
+      const personObj = { name: newName, number: newNumber }
+      setPersons(persons.concat(personObj))
     }
-
-    setNotes(notes.concat(noteObject))
-    setNewNote('')
+    setNewName('')
+    setNewNumber('')
   }
 
-  const handleNoteChange = (event) => {
-    console.log(event.target.value)
-    setNewNote(event.target.value)
+  const handleNameChange = (event) => {
+    setNewName(event.target.value)
   }
 
-  const notesToShow = showAll
-    ? notes
-    : notes.filter(note => note.important)
+  const handleNumberChange = (event) => {
+    setNewNumber(event.target.value)
+  }
+
+  const handleFilterChange = (event) => {
+    setNewFilter(event.target.value)
+  }
+
+  const personsToShow = persons.filter(p => p.name.toLowerCase().includes(newFilter.toLowerCase()))
 
   return (
     <div>
-      <h1>Notes</h1>
-      <div>
-        <button onClick={() => setShowAll(!showAll)}>
-          show {showAll ? 'important' : 'all' }
-        </button>
-      </div>   
-      <ul>
-        {notesToShow.map(note => 
-          <Note key={note.id} note={note} />
-        )}
-      </ul>
-      <form onSubmit={addNote}>
-        <input
-          value={newNote}
-          onChange={handleNoteChange}
-        />
-        <button type="submit">save</button>
-      </form>
+      <h2>Phonebook</h2>
+      <Filter filter={newFilter} handler={handleFilterChange} />
+      <h3>add a new</h3>
+      <PersonForm name={newName} nameHandler={handleNameChange} number={newNumber} numberHandler={handleNumberChange} adder={addPerson} />
+      <h3>numbers</h3>
+      <Persons persons={personsToShow} />
     </div>
   )
 }
