@@ -1,7 +1,7 @@
 import Country from './Country'
 import CountryInfo from './CountryInfo'
 
-const ShowCountries = ({ countries }) => {
+const ShowCountries = ({ countries, clickHandler }) => {
   if (countries.length == 1) {
     return (
       <CountryInfo country={countries[0]} />
@@ -9,7 +9,7 @@ const ShowCountries = ({ countries }) => {
   } else if (countries.length <= 10) {
     return (
       <div>
-        {countries.map(c => <Country key={c.name.official} name={c.name.common} />)}
+        {countries.map(c => <Country key={c.name.official} country={c} handler={clickHandler}/>)}
       </div>
     )
   } else {
