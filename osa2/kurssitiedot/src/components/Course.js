@@ -7,7 +7,7 @@ const Total = ({ parts }) =>
 
 const Part = ({ part }) => <p>{part.name} {part.exercises}</p>
 
-const Content = ({ parts }) => parts.map(p => <Part key={p.name} part={p} />)
+const Content = ({ parts }) => parts.map(p => <Part key={p.id} part={p} />)
 
 const Course = ({course}) => {
   return (
