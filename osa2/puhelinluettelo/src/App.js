@@ -36,12 +36,12 @@ const App = () => {
         personService
           .update(person.id, changedPerson)
           .then(returnedPerson => {
-            setPersons(persons.map(p => p.id != returnedPerson.id ? p : returnedPerson))
+            setPersons(persons.map(p => p.id !== returnedPerson.id ? p : returnedPerson))
             setMessage(`Updated number for ${newName}`)
             setMessageColor('green')
           })
           .catch(error => {
-            setPersons(persons.filter(p => p.id != person.id))
+            setPersons(persons.filter(p => p.id !== person.id))
             setMessage(`${newName} has already been removed from the server`)
             setMessageColor('red')
           })
@@ -70,7 +70,7 @@ const App = () => {
     if (window.confirm(`Delete ${person.name}?`)) {
       personService
         .remove(person.id)
-        .then(setPersons(persons.filter(p => p.id != person.id)))
+        .then(setPersons(persons.filter(p => p.id !== person.id)))
       setMessage(`Deleted ${person.name}`)
       setMessageColor('green')
       setTimeout(() => {
@@ -91,7 +91,7 @@ const App = () => {
     setNewFilter(event.target.value)
   }
 
-  const personsToShow = persons.filter(p => p.name.toLowerCase().includes(newFilter.toLowerCase()))
+  const personsToShow = persons.filter(p => String(p.name).toLowerCase().includes(newFilter.toLowerCase()))
 
   return (
     <div>
