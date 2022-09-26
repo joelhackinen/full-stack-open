@@ -57,7 +57,7 @@ const App = () => {
           showMessage(`Added ${newName}`, false)
         })
         .catch(error => {
-          showMessage(`${error.response.data}`, true)
+          showMessage(`${error.response.data.message}`, true)
         })
     }
     setNewName('')
