@@ -56,8 +56,8 @@ const App = () => {
           setPersons(persons.concat(returnedPerson))
           showMessage(`Added ${newName}`, false)
         })
-        .catch(error => {
-          showMessage(`${error.response.data.message}`, true)
+        .catch(e => {
+          showMessage(`${e.response.data.error}`, true)
         })
     }
     setNewName('')
