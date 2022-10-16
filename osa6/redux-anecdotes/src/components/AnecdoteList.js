@@ -8,7 +8,7 @@ const Anecdote = ({ anecdote }) => {
 
   const vote = (id) => {
     dispatch(addVote(id))
-    setNotification(`you voted ${anecdote.content}`, dispatch)
+    dispatch(setNotification(`you voted ${anecdote.content}`))
   }
 
   return (
@@ -29,7 +29,7 @@ const AnecdoteList = () => {
   const anecdotes = useSelector(state => state.anecdotes)
   const filterText = useSelector(state => state.filter)
   const sortedAnecdotes = [...anecdotes].sort((a, b) => b.votes - a.votes)
-  const anecdotesToShow = sortedAnecdotes.filter(a => a.content.toLowerCase().includes(filterText.toLowerCase()))
+  const anecdotesToShow = sortedAnecdotes.filter(a => a.content.toString().toLowerCase().includes(filterText.toLowerCase()))
 
   return (
     <div>

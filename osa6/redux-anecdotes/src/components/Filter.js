@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 
 const Filter = () => {
   const dispatch = useDispatch()
+  
   const handleChange = (event) => {
     dispatch(change(event.target.value))
   }
