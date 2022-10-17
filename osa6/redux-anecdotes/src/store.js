@@ -3,16 +3,13 @@ import anecdoteReducer from './reducers/anecdoteReducer'
 import filterReducer from './reducers/filterReducer'
 import notificationReducer from './reducers/notificationReducer'
 
-const createReduxStore = () => {
-  return (
-    configureStore({
-      reducer: {
-        anecdotes: anecdoteReducer,
-        notification: notificationReducer,
-        filter: filterReducer
-      }
-    })
-  )
-}
+const store = configureStore({
+  reducer: {
+    anecdotes: anecdoteReducer,
+    notification: notificationReducer,
+    filter: filterReducer
+  }
+})
 
-export default createReduxStore
+
+export default store

@@ -4,21 +4,22 @@ import { setNotification } from '../reducers/notificationReducer'
 
 
 const Anecdote = ({ anecdote }) => {
+  const { content, votes } = anecdote
   const dispatch = useDispatch()
 
-  const vote = (id) => {
-    dispatch(addVote(id))
-    dispatch(setNotification(`you voted ${anecdote.content}`))
+  const vote = (anecdoteObject) => {
+    dispatch(addVote(anecdoteObject))
+    dispatch(setNotification(`you voted ${content}`, 5))
   }
 
   return (
     <div>
       <div>
-        {anecdote.content}
+        {content}
       </div>
       <div>
-        has {anecdote.votes}
-        <button onClick={() => vote(anecdote.id)}>vote</button>
+        has {votes}
+        <button onClick={() => vote(anecdote)}>vote</button>
       </div>
     </div>
   )
