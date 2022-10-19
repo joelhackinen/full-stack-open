@@ -1,6 +1,7 @@
 import { Routes, Route, Link, useMatch, useNavigate } from 'react-router-dom'
 import  { useField } from './hooks'
 import { useState } from 'react'
+import { Table } from 'react-bootstrap'
 
 const Menu = () => {
   const padding = {
@@ -29,9 +30,17 @@ const Anecdote = ({ anecdote }) => {
 const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
-    <ul>
-      {anecdotes.map(a => <li key={a.id} ><Link to={`anecdotes/${a.id}`}>{a.content}</Link></li>)}
-    </ul>
+    <Table striped>
+      <tbody>
+        {anecdotes.map(a => 
+          <tr key={a.id}>
+            <td>
+              <Link to={`anecdotes/${a.id}`}>{a.content}</Link>
+            </td>
+          </tr>
+        )}
+      </tbody>
+    </Table>
   </div>
 )
 
@@ -161,7 +170,7 @@ const App = () => {
   }
 
   return (
-    <div>
+    <div className="container">
       <h1>Software anecdotes</h1>
       <Menu />
       <Notification notification={notification} />
