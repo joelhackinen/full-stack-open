@@ -1,66 +1,47 @@
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setErrorMessage, setSuccessMessage } from './reducers/notificationReducer'
 import { initializeBlogs, addLike, deleteBlog, createBlog } from './reducers/blogsReducer'
+import { initializeUser, login, logout } from './reducers/userReducer'
 import Togglable from './components/Togglable'
 import Blog from './components/Blog'
 import Message from './components/Message'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
-import blogService from './services/blogService'
-import loginService from './services/loginService'
-import jwt_decode from 'jwt-decode'
 
 const App = () => {
   const dispatch = useDispatch()
   const blogs = useSelector(state => state.blogs)
-  const [user, setUser] = useState(null)
+  const user = useSelector(state => state.user)
 
   useEffect(() => {
     dispatch(initializeBlogs())
   }, [])
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      blogService.setToken(user.token)
-      user.id = jwt_decode(user.token).id
-      setUser(user)
-      console.log(user)
-    }
+    dispatch(initializeUser())
   }, [])
 
   const createFormRef = useRef()
 
-  const login = async (username, password) => {
+  const handleLogin = async (username, password) => {
     try {
-      const loggedUser = await loginService.login({
-        username, password,
-      })
-      blogService.setToken(loggedUser.token)
-      loggedUser.id = jwt_decode(loggedUser.token).id
-      window.localStorage.setItem(
-        'loggedBloglistUser', JSON.stringify(loggedUser)
-      )
+      dispatch(login(username, password))
       dispatch(setSuccessMessage(`welcome, ${username}!`, 5))
-      setUser(loggedUser)
     }
     catch (e) {
       dispatch(setErrorMessage('wrong username or password', 5))
     }
   }
 
-  const handleLogout = async (event) => {
-    event.preventDefault()
+  const handleLogout = () => {
     try {
-      window.localStorage.removeItem('loggedBloglistUser')
+      dispatch(logout())
       dispatch(setSuccessMessage('logged out', 5))
     }
     catch (e) {
       dispatch(setErrorMessage('loggin out failed', 5))
     }
-    setUser(null)
   }
 
   const addBlog = async (blogObject) => {
@@ -101,7 +82,7 @@ const App = () => {
       <div>
         <Message />
         <LoginForm
-          login={login}
+          login={handleLogin}
         />
       </div>
     )

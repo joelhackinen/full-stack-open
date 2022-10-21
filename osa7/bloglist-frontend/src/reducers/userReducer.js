@@ -10,7 +10,7 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setUser(state, action) {
-      state = action.payload
+      return action.payload
     }
   }
 })
@@ -18,19 +18,19 @@ const userSlice = createSlice({
 export const { setUser } = userSlice.actions
 
 export const initializeUser = () => {
-  const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')
-  if (loggedUserJSON) {
-    const user = JSON.parse(loggedUserJSON)
-    blogService.setToken(user.token)
-    user.id = jwt_decode(user.token).id
-    setUser(user)
-    console.log(user)
+  return dispatch => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      blogService.setToken(user.token)
+      user.id = jwt_decode(user.token).id
+      dispatch(setUser(user))
+    }
   }
 }
 
-/*
-export const login = async (username, password) => {
-  try {
+export const login = (username, password) => {
+  return async dispatch => {
     const loggedUser = await loginService.login({
       username, password,
     })
@@ -39,13 +39,17 @@ export const login = async (username, password) => {
     window.localStorage.setItem(
       'loggedBloglistUser', JSON.stringify(loggedUser)
     )
-    showMessage(`welcome, ${username}!`, false)
-    setUser(loggedUser)
-  }
-  catch (e) {
-    showMessage('wrong username or password', true)
+    dispatch(setUser(loggedUser))
   }
 }
-*/
+
+export const logout = () => {
+  return dispatch => {
+    window.localStorage.removeItem('loggedBloglistUser')
+    blogService.setToken(null)
+    dispatch(setUser(null))
+  }
+}
+
 
 export default userSlice.reducer
