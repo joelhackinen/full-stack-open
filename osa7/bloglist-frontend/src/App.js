@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setErrorMessage, setSuccessMessage } from './reducers/notificationReducer'
+import { initializeBlogs, addLike, deleteBlog, createBlog } from './reducers/blogsReducer'
 import Togglable from './components/Togglable'
 import Blog from './components/Blog'
 import Message from './components/Message'
@@ -12,13 +13,11 @@ import jwt_decode from 'jwt-decode'
 
 const App = () => {
   const dispatch = useDispatch()
-  const [blogs, setBlogs] = useState([])
+  const blogs = useSelector(state => state.blogs)
   const [user, setUser] = useState(null)
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
+    dispatch(initializeBlogs())
   }, [])
 
   useEffect(() => {
@@ -66,14 +65,9 @@ const App = () => {
 
   const addBlog = async (blogObject) => {
     try {
+      dispatch(createBlog({ ...blogObject, user }))
       createFormRef.current.toggleVisibility()
-      const { token, ...u } = user
-      const created = await blogService.create(
-        { user: u, ...blogObject }
-      )
-      console.log(created)
-      dispatch(setSuccessMessage(`a new blog ${created.title} by ${created.author} created`, 5))
-      setBlogs(blogs.concat({ ...created, user: user }))
+      dispatch(setSuccessMessage(`a new blog ${blogObject.title} by ${blogObject.author} created`, 5))
     }
     catch (e) {
       dispatch(setErrorMessage(`adding failed: ${e}`, 5))
@@ -81,13 +75,8 @@ const App = () => {
   }
 
   const editBlog = async (blogObject) => {
-    const { id, ...newBlog } = blogObject
     try {
-      const created = await blogService.update(
-        id,
-        newBlog
-      )
-      setBlogs(blogs.map(b => b.id === id ? b = { ...b, likes: created.likes } : b))
+      dispatch(addLike(blogObject))
     } catch (e) {
       dispatch(setSuccessMessage('editing failed', 5))
     }
@@ -96,10 +85,7 @@ const App = () => {
   const removeBlog = async (blogObject) => {
     if (window.confirm(`Remove ${blogObject.title} by ${blogObject.author}?`)) {
       try {
-        await blogService.remove(
-          blogObject.id
-        )
-        setBlogs(blogs.filter(b => b.id !== blogObject.id))
+        dispatch(deleteBlog(blogObject.id))
         dispatch(setSuccessMessage('blog removed', 5))
       }
       catch (e) {
@@ -108,7 +94,7 @@ const App = () => {
     }
   }
 
-  const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes)
+  const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes)
 
   if (user === null) {
     return (
@@ -127,7 +113,7 @@ const App = () => {
       <Message />
       {user.name} logged in
       <button id="logout-button" onClick={handleLogout}>Logout</button>
-      <Togglable showText='create' hideText='cancel'  ref={createFormRef}>
+      <Togglable showText='create' hideText='cancel' ref={createFormRef}>
         <BlogForm createBlog={addBlog} user={user} />
       </Togglable>
       <h3>blogs</h3>
