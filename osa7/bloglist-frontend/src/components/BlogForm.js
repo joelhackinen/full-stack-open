@@ -1,55 +1,68 @@
-import { useState } from 'react'
+import { useField } from '../hooks'
+import { useRef } from 'react'
+import { createBlog } from '../reducers/blogsReducer'
+import Togglable from './Togglable'
+import { useDispatch, useSelector } from 'react-redux'
 
+const BlogForm = () => {
+  const { id, name, username } = useSelector(state => state.user)
+  const dispatch = useDispatch()
+  const createFormRef = useRef()
+  const { reset: resetTitle, ...title } = useField('title', 'text')
+  const { reset: resetAuthor, ...author } = useField('author', 'text')
+  const { reset: resetUrl, ...url } = useField('url', 'text')
 
-const BlogForm = ({ createBlog }) => {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
-
-  const handleCreate = async (event) => {
+  const handleCreate = (event) => {
     event.preventDefault()
-    createBlog({
-      title,
-      author,
-      url
-    })
-    setTitle('')
-    setAuthor('')
-    setUrl('')
+    dispatch(createBlog({
+      title: title.value,
+      author: author.value,
+      url: url.value,
+      user: {
+        id,
+        name,
+        username
+      }
+    }))
+    createFormRef.current.toggleVisibility()
+    resetFields()
+  }
+
+  const resetFields = () => {
+    resetTitle()
+    resetAuthor()
+    resetUrl()
   }
 
   return (
-    <div className="formDiv">
-      <h3>create new</h3>
-      <form onSubmit={handleCreate}>
-        <div>
-          <input
-            type="text"
-            id="title-input"
-            value={title}
-            placeholder='title here'
-            onChange={({ target }) => setTitle(target.value)}
-          />
+    <div>
+      <Togglable showText='create' hideText='cancel' ref={createFormRef}>
+        <div className="formDiv">
+          <h3>create new</h3>
+          <form onSubmit={handleCreate}>
+            <div>
+              <input
+                placeholder="title here"
+                { ...title }
+              />
+            </div>
+            <div>
+              <input
+                placeholder="author here"
+                { ...author }
+              />
+            </div>
+            <div>
+              <input
+                placeholder="url here"
+                { ...url }
+              />
+            </div>
+            <button id="create-button" type="submit">create</button>
+            <button type="button" onClick={resetFields}>reset</button>
+          </form>
         </div>
-        <div>
-          <input
-            type="text"
-            id="author-input"
-            value={author}
-            placeholder='author here'
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </div>
-        <div>
-          <input
-            type="text"
-            id="url-input"
-            value={url}
-            placeholder='url here'
-            onChange={({ target }) => setUrl(target.value)}/>
-        </div>
-        <button id="create-button" type="submit">create</button>
-      </form>
+      </Togglable>
     </div>
   )
 }

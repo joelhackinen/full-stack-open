@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { setErrorMessage, setSuccessMessage } from './notificationReducer'
 import blogService from '../services/blogService'
 import loginService from '../services/loginService'
 import jwt_decode from 'jwt-decode'
@@ -11,11 +12,14 @@ const userSlice = createSlice({
   reducers: {
     setUser(state, action) {
       return action.payload
+    },
+    unsetUser(state, action) {
+      return initialState
     }
   }
 })
 
-export const { setUser } = userSlice.actions
+export const { setUser, unsetUser } = userSlice.actions
 
 export const initializeUser = () => {
   return dispatch => {
@@ -31,15 +35,20 @@ export const initializeUser = () => {
 
 export const login = (username, password) => {
   return async dispatch => {
-    const loggedUser = await loginService.login({
-      username, password,
-    })
-    blogService.setToken(loggedUser.token)
-    loggedUser.id = jwt_decode(loggedUser.token).id
-    window.localStorage.setItem(
-      'loggedBloglistUser', JSON.stringify(loggedUser)
-    )
-    dispatch(setUser(loggedUser))
+    try {
+      const loggedUser = await loginService.login({
+        username, password,
+      })
+      blogService.setToken(loggedUser.token)
+      loggedUser.id = jwt_decode(loggedUser.token).id
+      window.localStorage.setItem(
+        'loggedBloglistUser', JSON.stringify(loggedUser)
+      )
+      dispatch(setUser(loggedUser))
+      dispatch(setSuccessMessage(`welcome, ${username}!`, 5))
+    } catch (e) {
+      dispatch(setErrorMessage('wrong username or password', 5))
+    }
   }
 }
 
@@ -47,7 +56,8 @@ export const logout = () => {
   return dispatch => {
     window.localStorage.removeItem('loggedBloglistUser')
     blogService.setToken(null)
-    dispatch(setUser(null))
+    dispatch(unsetUser())
+    dispatch(setSuccessMessage('logged out', 5))
   }
 }
 

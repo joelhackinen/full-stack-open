@@ -17,15 +17,15 @@ describe('Bloglist app', function() {
   })
 
   it('login form works', function() {
-    cy.get('#username').type('cypress')
-    cy.get('#password').type('cypress')
+    cy.get('#username-input').type('cypress')
+    cy.get('#password-input').type('cypress')
     cy.get('#login-button').click()
     cy.contains('cypress logged in')
   })
 
   it('login fails with wrong password', function() {
-    cy.get('#username').type('cypress')
-    cy.get('#password').type('wrongpassword')
+    cy.get('#username-input').type('cypress')
+    cy.get('#password-input').type('wrongpassword')
     cy.get('#login-button').click()
     cy.get('.message')
       .should('contain', 'wrong username or password')

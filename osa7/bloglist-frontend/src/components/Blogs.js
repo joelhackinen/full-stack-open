@@ -7,6 +7,7 @@ const Blogs = () => {
 
   return (
     <div>
+      <h3>blogs</h3>
       {sortedBlogs.map(b =>
         <Blog key={b.id} blog={b} />
       )}
