@@ -1,15 +1,9 @@
 import { useState, useImperativeHandle, forwardRef } from 'react'
-import PropTypes from 'prop-types'
+import { Offcanvas } from 'react-bootstrap'
 
 const Togglable = forwardRef((props, ref) => {
-  const [visible, setVisible] = useState(false)
-
-  const hideWhenVisible = { display: visible ? 'none' : '' }
-  const showWhenVisible = { display: visible ? '' : 'none' }
-
-  const toggleVisibility = () => {
-    setVisible(!visible)
-  }
+  const [show, setShow] = useState(false)
+  const toggleVisibility = () => setShow(!show)
 
   useImperativeHandle(ref, () => {
     return {
@@ -18,22 +12,16 @@ const Togglable = forwardRef((props, ref) => {
   })
 
   return (
-    <div>
-      <div style={hideWhenVisible}>
-        <button onClick={toggleVisibility}>{props.showText}</button>
-      </div>
-      <div className="togglableContent" style={showWhenVisible}>
+    <Offcanvas show={show} onHide={toggleVisibility} placement={props.placement}>
+      <Offcanvas.Header closeButton>
+        <Offcanvas.Title>{props.titleText}</Offcanvas.Title>
+      </Offcanvas.Header>
+      <Offcanvas.Body>
         {props.children}
-        <button onClick={toggleVisibility}>{props.hideText}</button>
-      </div>
-    </div>
+      </Offcanvas.Body>
+    </Offcanvas>
   )
 })
-
-Togglable.propTypes = {
-  showText: PropTypes.string.isRequired,
-  hideText: PropTypes.string.isRequired
-}
 
 Togglable.displayName = 'Togglable'
 

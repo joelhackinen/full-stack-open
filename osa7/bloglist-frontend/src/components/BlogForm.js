@@ -1,13 +1,14 @@
 import { useField } from '../hooks'
-import { useRef } from 'react'
+import { forwardRef } from 'react'
 import { createBlog } from '../reducers/blogsReducer'
-import Togglable from './Togglable'
 import { useDispatch, useSelector } from 'react-redux'
+import { Form, Button } from 'react-bootstrap'
+import Togglable from './Togglable'
 
-const BlogForm = () => {
-  const { id, name, username } = useSelector(state => state.user)
+const BlogForm = forwardRef((props, ref) => {
   const dispatch = useDispatch()
-  const createFormRef = useRef()
+  const { id, name, username } = useSelector(state => state.user)
+
   const { reset: resetTitle, ...title } = useField('title', 'text')
   const { reset: resetAuthor, ...author } = useField('author', 'text')
   const { reset: resetUrl, ...url } = useField('url', 'text')
@@ -24,7 +25,7 @@ const BlogForm = () => {
         username
       }
     }))
-    createFormRef.current.toggleVisibility()
+    props.toggleForm()
     resetFields()
   }
 
@@ -34,37 +35,43 @@ const BlogForm = () => {
     resetUrl()
   }
 
+  const style = {
+    marginBottom: 5
+  }
+
   return (
-    <div>
-      <Togglable showText='create' hideText='cancel' ref={createFormRef}>
-        <div className="formDiv">
-          <h3>create new</h3>
-          <form onSubmit={handleCreate}>
-            <div>
-              <input
+    <Togglable placement="end" titleText="Add a new blog" ref={ref}>
+      <div className="formDiv">
+        <Form onSubmit={handleCreate}>
+          <Form.Group>
+            <div style={style}>
+              <Form.Control
                 placeholder="title here"
                 { ...title }
               />
             </div>
-            <div>
-              <input
+            <div style={style}>
+              <Form.Control
                 placeholder="author here"
                 { ...author }
               />
             </div>
-            <div>
-              <input
+            <div style={style}>
+              <Form.Control
                 placeholder="url here"
                 { ...url }
               />
             </div>
-            <button id="create-button" type="submit">create</button>
-            <button type="button" onClick={resetFields}>reset</button>
-          </form>
-        </div>
-      </Togglable>
-    </div>
+            <Button variant="success" id="create-button" type="submit">
+              add
+            </Button>
+          </Form.Group>
+        </Form>
+      </div>
+    </Togglable>
   )
-}
+})
+
+BlogForm.displayName = 'BlogForm'
 
 export default BlogForm

@@ -10,7 +10,7 @@ import Message from './components/Message'
 import LoginForm from './components/LoginForm'
 import User from './components/User'
 import Users from './components/Users'
-import BlogPage from './components/BlogPage'
+import Blog from './components/Blog'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -40,8 +40,13 @@ const App = () => {
     ? blogs.find(b => b.id === blogMatch.params.id)
     : null
 
+  const style = {
+    maxWidth: 750,
+    margin: 'auto',
+  }
+
   return (
-    <div>
+    <div className="container" style={style}>
       {user === null
         ?
         <div>
@@ -51,13 +56,12 @@ const App = () => {
         :
         <div>
           <Menu />
-          <h2>blogapp</h2>
           <Message />
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/users' element={<Users />} />
             <Route path='/users/:id' element={<User user={matchedUser} />} />
-            <Route path='/blogs/:id' element={<BlogPage blog={matchedBlog} />} />
+            <Route path='/blogs/:id' element={<Blog blog={matchedBlog} />} />
           </Routes>
         </div>
       }

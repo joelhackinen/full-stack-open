@@ -31,7 +31,7 @@ export const createBlog = (blogObject) => {
       dispatch(appendBlog({ ...created, user: blogObject.user }))
       dispatch(setSuccessMessage(`a new blog ${blogObject.title} by ${blogObject.author} created`, 5))
     } catch (e) {
-      dispatch(setErrorMessage(`adding failed: ${e}`, 5))
+      dispatch(setErrorMessage(`adding failed: ${e.response.data.error}`, 5))
     }
   }
 }
@@ -50,7 +50,7 @@ export const addLike = (blogObject) => {
       const likedBlog = await blogService.update(id, { ...blog, likes: blog.likes + 1 })
       dispatch(editBlog(likedBlog))
     } catch (e) {
-      dispatch(setErrorMessage(`liking failed ${e}`, 5))
+      dispatch(setErrorMessage(`liking failed ${e.response.data.error}`, 5))
     }
   }
 }
@@ -62,7 +62,7 @@ export const deleteBlog = (id) => {
       dispatch(removeBlog(id))
       dispatch(setSuccessMessage('blog removed', 5))
     } catch (e) {
-      dispatch(setErrorMessage(`removing failed ${e}`, 5))
+      dispatch(setErrorMessage(`removing failed ${e.response.data.error}`, 5))
     }
   }
 }

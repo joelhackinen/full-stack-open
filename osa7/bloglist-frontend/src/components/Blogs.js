@@ -1,16 +1,30 @@
 import { useSelector } from 'react-redux'
-import Blog from './Blog'
+import { useNavigate } from 'react-router-dom'
+import { ListGroup, Button } from 'react-bootstrap'
 
-const Blogs = () => {
+const Blogs = ({ toggleForm }) => {
+  const navigate = useNavigate()
   const blogs = useSelector(state => state.blogs)
   const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes)
 
+  const blogsStyle = {
+    marginTop: 20
+  }
+
   return (
     <div>
-      <h3>blogs</h3>
-      {sortedBlogs.map(b =>
-        <Blog key={b.id} blog={b} />
-      )}
+      <h4>blogs <Button variant="success" onClick={toggleForm}>add new</Button></h4>
+      <div style={blogsStyle}>
+        <ListGroup>
+          {sortedBlogs.map(({ id, author, title }) =>
+            <div key={id}>
+              <ListGroup.Item action onClick={() => navigate(`/blogs/${id}`)}>
+                {title} by {author}
+              </ListGroup.Item>
+            </div>
+          )}
+        </ListGroup>
+      </div>
     </div>
   )
 }

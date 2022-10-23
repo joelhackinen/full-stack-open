@@ -47,7 +47,7 @@ export const login = (username, password) => {
       dispatch(setUser(loggedUser))
       dispatch(setSuccessMessage(`welcome, ${username}!`, 5))
     } catch (e) {
-      dispatch(setErrorMessage('wrong username or password', 5))
+      dispatch(setErrorMessage(`${e.response.data.error}`, 5))
     }
   }
 }
