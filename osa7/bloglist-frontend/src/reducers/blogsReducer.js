@@ -6,7 +6,7 @@ const blogSlice = createSlice({
   name: 'blogs',
   initialState: [],
   reducers: {
-    editBlog(state, action) {
+    likeBlog(state, action) {
       const id = action.payload.id
       return state.map(b => b.id === id ? b = { ...b, likes: action.payload.likes } : b)
     },
@@ -18,11 +18,15 @@ const blogSlice = createSlice({
     },
     removeBlog(state, action) {
       return state.filter(b => b.id !== action.payload)
+    },
+    commentBlog(state, action) {
+      const id = action.payload.id
+      return state.map(b => b.id === id ? b = { ...b, comments: action.payload.comments } : b)
     }
   }
 })
 
-export const { editBlog, setBlogs, appendBlog, removeBlog } = blogSlice.actions
+export const { commentBlog, likeBlog, setBlogs, appendBlog, removeBlog } = blogSlice.actions
 
 export const createBlog = (blogObject) => {
   return async dispatch => {
@@ -48,7 +52,7 @@ export const addLike = (blogObject) => {
     try {
       const { id, user, ...blog } = blogObject
       const likedBlog = await blogService.update(id, { ...blog, likes: blog.likes + 1 })
-      dispatch(editBlog(likedBlog))
+      dispatch(likeBlog(likedBlog))
     } catch (e) {
       dispatch(setErrorMessage(`liking failed ${e.response.data.error}`, 5))
     }
@@ -63,6 +67,19 @@ export const deleteBlog = (id) => {
       dispatch(setSuccessMessage('blog removed', 5))
     } catch (e) {
       dispatch(setErrorMessage(`removing failed ${e.response.data.error}`, 5))
+    }
+  }
+}
+
+export const addComment = (blogObject, comment) => {
+  return async dispatch => {
+    try {
+      const { id, user, ...blog } = blogObject
+      const commentedBlog = await blogService.update(id, { ...blog, comments: blog.comments.concat(comment) })
+      dispatch(commentBlog(commentedBlog))
+      dispatch(setSuccessMessage('comment added', 5))
+    } catch (e) {
+      dispatch(setErrorMessage(`commenting failed ${e.response.data.error}`, 5))
     }
   }
 }
