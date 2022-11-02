@@ -6,12 +6,18 @@ import { Link } from 'react-router-dom'
 const Menu = () => {
   const { name } = useSelector(state => state.user)
   const dispatch = useDispatch()
+
   const style = {
-    marginBottom: 20,
-    marginTop: 10
+    padding: 10
   }
+
   const navBrandStyle = {
-    fontSize: 30
+    fontSize: 30,
+    marginLeft: 10
+  }
+
+  const toggleStyle = {
+    marginRight: 10
   }
 
   return (
@@ -20,17 +26,17 @@ const Menu = () => {
         <Navbar.Brand>
           <strong style={navBrandStyle}>Blogapp</strong>
         </Navbar.Brand>
-        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        <Navbar.Toggle style={toggleStyle} aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="m-auto">
+          <Nav style={style} className="m-auto">
             <Nav.Link href="#" as="span">
-              <Link to='/'><span className="align-middle">Blogs</span></Link>
+              <Link to='/'>Blogs</Link>
             </Nav.Link>
             <Nav.Link href="#" as="span">
-              <Link to='/users'><span className="align-middle">Users</span></Link>
+              <Link to='/users'>Users</Link>
             </Nav.Link>
             <Nav.Link href="#" as="span">
-              <span className="align-middle"><em>{name} logged in </em></span>
+              <em>{name} logged in </em>
               <Button size="sm" variant="secondary" id="logout-button" onClick={() => dispatch(logout())}>
                 logout
               </Button>
@@ -41,5 +47,6 @@ const Menu = () => {
     </div>
   )
 }
+
 
 export default Menu

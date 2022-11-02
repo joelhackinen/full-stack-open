@@ -8,7 +8,6 @@ const Users = () => {
 
   return (
     <div>
-      <h2>users</h2>
       <Table striped>
         <tbody>
           <tr>
@@ -30,5 +29,6 @@ const Users = () => {
     </div>
   )
 }
+
 
 export default Users

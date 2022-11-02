@@ -11,7 +11,7 @@ const usersSlice = createSlice({
       return action.payload
     },
     appendUser(state, action) {
-      state.push(action.payload)
+      return state.concat(action.payload)
     }
   }
 })
@@ -24,5 +24,6 @@ export const initializeUsers = () => {
     dispatch(setUsers(users))
   }
 }
+
 
 export default usersSlice.reducer

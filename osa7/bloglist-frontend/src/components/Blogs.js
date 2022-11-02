@@ -7,24 +7,16 @@ const Blogs = ({ toggleForm }) => {
   const blogs = useSelector(state => state.blogs)
   const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes)
 
-  const blogsStyle = {
-    marginTop: 20
-  }
-
   return (
     <div>
       <h4>blogs <Button variant="success" onClick={toggleForm}>add new</Button></h4>
-      <div style={blogsStyle}>
-        <ListGroup>
-          {sortedBlogs.map(({ id, author, title }) =>
-            <div key={id}>
-              <ListGroup.Item action onClick={() => navigate(`/blogs/${id}`)}>
-                {title} by {author}
-              </ListGroup.Item>
-            </div>
-          )}
-        </ListGroup>
-      </div>
+      <ListGroup>
+        {sortedBlogs.map(({ id, author, title }) =>
+          <ListGroup.Item key={id} action onClick={() => navigate(`/blogs/${id}`)}>
+            {title} by {author}
+          </ListGroup.Item>
+        )}
+      </ListGroup>
     </div>
   )
 }

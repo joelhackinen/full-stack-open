@@ -28,7 +28,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(initializeUsers())
-  }, [])
+  }, [blogs])
 
   const userMatch = useMatch('/users/:id')
   const matchedUser = userMatch
@@ -40,13 +40,8 @@ const App = () => {
     ? blogs.find(b => b.id === blogMatch.params.id)
     : null
 
-  const style = {
-    maxWidth: 750,
-    margin: 'auto',
-  }
-
   return (
-    <div className="container" style={style}>
+    <div className="container" style={{ maxWidth: 1080 }}>
       {user === null
         ?
         <div>
@@ -56,13 +51,15 @@ const App = () => {
         :
         <div>
           <Menu />
-          <Message />
-          <Routes>
-            <Route path='/' element={<Home />} />
-            <Route path='/users' element={<Users />} />
-            <Route path='/users/:id' element={<User user={matchedUser} />} />
-            <Route path='/blogs/:id' element={<Blog blog={matchedBlog} />} />
-          </Routes>
+          <div style={{ padding: '3%' }}>
+            <Message />
+            <Routes>
+              <Route path='/' element={<Home />} />
+              <Route path='/users' element={<Users />} />
+              <Route path='/users/:id' element={<User user={matchedUser} />} />
+              <Route path='/blogs/:id' element={<Blog blog={matchedBlog} />} />
+            </Routes>
+          </div>
         </div>
       }
     </div>

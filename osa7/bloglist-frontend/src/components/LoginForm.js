@@ -13,8 +13,8 @@ const LoginForm = () => {
     event.preventDefault()
     dispatch(login(
       username.value,
-      password.value)
-    )
+      password.value
+    ))
   }
 
   return (
@@ -32,7 +32,7 @@ const LoginForm = () => {
           <Form.Control
             { ...password}
           />
-          <Button variant="primary" id="login-button" type="submit">
+          <Button style={{ marginTop: 5 }} variant="primary" id="login-button" type="submit">
             login
           </Button>
         </Form.Group>

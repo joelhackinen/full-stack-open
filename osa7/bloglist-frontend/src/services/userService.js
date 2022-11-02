@@ -12,5 +12,4 @@ const get = async (id) => {
 }
 
 
-
 export default { getAll, get }

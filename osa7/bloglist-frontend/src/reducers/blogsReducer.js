@@ -14,7 +14,7 @@ const blogSlice = createSlice({
       return action.payload
     },
     appendBlog(state, action) {
-      state.push(action.payload)
+      return state.concat(action.payload)
     },
     removeBlog(state, action) {
       return state.filter(b => b.id !== action.payload)
@@ -54,7 +54,7 @@ export const addLike = (blogObject) => {
       const likedBlog = await blogService.update(id, { ...blog, likes: blog.likes + 1 })
       dispatch(likeBlog(likedBlog))
     } catch (e) {
-      dispatch(setErrorMessage(`liking failed ${e.response.data.error}`, 5))
+      dispatch(setErrorMessage(`liking failed: ${e.response.data.error}`, 5))
     }
   }
 }
@@ -66,7 +66,7 @@ export const deleteBlog = (id) => {
       dispatch(removeBlog(id))
       dispatch(setSuccessMessage('blog removed', 5))
     } catch (e) {
-      dispatch(setErrorMessage(`removing failed ${e.response.data.error}`, 5))
+      dispatch(setErrorMessage(`removing failed: ${e.response.data.error}`, 5))
     }
   }
 }
@@ -79,9 +79,10 @@ export const addComment = (blogObject, comment) => {
       dispatch(commentBlog(commentedBlog))
       dispatch(setSuccessMessage('comment added', 5))
     } catch (e) {
-      dispatch(setErrorMessage(`commenting failed ${e.response.data.error}`, 5))
+      dispatch(setErrorMessage(`commenting failed: ${e.response.data.error}`, 5))
     }
   }
 }
+
 
 export default blogSlice.reducer

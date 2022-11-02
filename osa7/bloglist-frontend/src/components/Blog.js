@@ -1,9 +1,9 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { addLike, deleteBlog, addComment } from '../reducers/blogsReducer'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { Button, Badge } from 'react-bootstrap'
 import CommentForm from './CommentForm'
-import { setSuccessMessage } from '../reducers/notificationReducer'
+
 
 const BlogPage = ({ blog }) => {
   const navigate = useNavigate()
@@ -33,35 +33,34 @@ const BlogPage = ({ blog }) => {
 
   return (
     <div>
-      <div>
-        <h3>
-          {title} by {author}
-          <Button onClick={handleLike} size="sm">
-            Likes <Badge bg="secondary">{likes}</Badge>
-          </Button>
-        </h3>
-      </div>
+      <h3>
+        <span style={{ marginRight: 10 }}>{title} by {author}</span>
+        <Button onClick={handleLike} size="sm">
+          Likes <Badge bg="secondary">{likes}</Badge>
+        </Button>
+      </h3>
       <div>
         <a href={`//${url}`}>{url}</a>
       </div>
       <div>
-        added by {user.name}
+        added by <Link to={`/users/${user.id}`}>{user.name}</Link>
       </div>
       <div>
         {user.id === currentUser.id
-          ? <Button variant="warning" onClick={handleDelete}>remove</Button>
+          ? <Button variant="warning" id="remove-button" onClick={handleDelete}>remove</Button>
           : null
         }
       </div>
-      <div>
+      <div style={ { marginTop: 20 } }>
         <CommentForm commentHandler={handleComment} />
-      </div>
-      <div>
-        <ul>
-          {comments.map(c =>
-            <li key={c}>{c}</li>
-          )}
-        </ul>
+        <div style={ { marginTop: 20 } }>
+          <h5>Comments</h5>
+          <ul>
+            {comments.map((c, i) =>
+              <li key={i}>{c}</li>
+            )}
+          </ul>
+        </div>
       </div>
     </div>
   )
