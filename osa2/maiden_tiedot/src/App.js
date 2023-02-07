@@ -29,7 +29,6 @@ const App = () => {
     setClick(true)
     setCountries([country])
   }
-  //sdsadas
 
   const countriesToShow = countries.filter(c => c.name.common.toLowerCase().includes(name.toLowerCase()))
 
